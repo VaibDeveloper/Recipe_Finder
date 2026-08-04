@@ -20,15 +20,16 @@ function RecipeCard({ recipe, isFavorite, onToggleFavorite }: RecipeCardProps) {
 
   return (
     <div className="movie-card" onClick={() => navigate(`/recipe/${recipe.id}`)}>
+      <button
+        className={`favorite-icon-btn ${isFavorite ? "favorited" : ""}`}
+        onClick={handleFavoriteClick}
+        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+      >
+        <span>{isFavorite ? "★" : "☆"}</span>
+      </button>
       <img src={recipe.thumbnail} alt={recipe.name} className="movie-poster" />
       <h3>{recipe.name}</h3>
       <p>{recipe.category}</p>
-      <button
-        className={isFavorite ? "favorited" : ""}
-        onClick={handleFavoriteClick}
-      >
-        {isFavorite ? "★ Favorited" : "☆ Add to favorites"}
-      </button>
     </div>
   );
 }
