@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import type { RecipeDetail as RecipeDetailType, MealDetailResponse, RawMealDetail } from "../types/Recipe";
+import type {
+  RecipeDetail as RecipeDetailType,
+  MealDetailResponse,
+  RawMealDetail,
+} from "../types/Recipe";
+import SkeletonCard from "../components/SkeletonCard";
 
 function extractIngredients(meal: RawMealDetail) {
   const ingredients: { name: string; measure: string }[] = [];
@@ -79,9 +84,10 @@ function RecipeDetail() {
 
   if (loading) {
     return (
-      <div className="status-message">
-        <div className="spinner"></div>
-        <p>Loading recipe...</p>
+      <div className="movie-grid">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
       </div>
     );
   }
@@ -100,13 +106,22 @@ function RecipeDetail() {
   return (
     <div className="recipe-detail">
       <div className="recipe-header">
-        <img src={recipe.thumbnail} alt={recipe.name} className="recipe-detail-img" />
+        <img
+          src={recipe.thumbnail}
+          alt={recipe.name}
+          className="recipe-detail-img"
+        />
         <div>
           <span className="recipe-category-tag">{recipe.category}</span>
           <h1>{recipe.name}</h1>
           <p className="recipe-meta">{recipe.area} cuisine</p>
           {recipe.youtube && (
-            <a href={recipe.youtube} target="_blank" rel="noreferrer" className="youtube-link">
+            <a
+              href={recipe.youtube}
+              target="_blank"
+              rel="noreferrer"
+              className="youtube-link"
+            >
               ▶ Watch on YouTube
             </a>
           )}
@@ -137,7 +152,9 @@ function RecipeDetail() {
       </div>
 
       <div className="back-link-wrapper">
-        <Link to="/" className="back-link">← Back to recipes</Link>
+        <Link to="/" className="back-link">
+          ← Back to recipes
+        </Link>
       </div>
     </div>
   );

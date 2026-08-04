@@ -12,6 +12,43 @@
   --radius: 14px;
 }
 
+[data-theme="light"] {
+  --bg: #f7f7f9;
+  --surface: #ffffff;
+  --surface-hover: #f0f0f3;
+  --border: #e2e2e8;
+  --text-primary: #1a1d24;
+  --text-secondary: #6b7280;
+  --accent: #6c5ce7;
+  --accent-hover: #5a4bd4;
+  --danger: #e74c3c;
+  --danger-bg: #fdecea;
+}
+
+body, .movie-card, .navbar, .search-input, .category-select {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-hover);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -32,7 +69,7 @@ body {
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
-  background: rgba(15, 17, 21, 0.85);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
   backdrop-filter: blur(8px);
   z-index: 10;
 }
@@ -83,6 +120,43 @@ body {
 .search-input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.2);
+}
+
+.search-input-container {
+  position: relative;
+  flex: 1 1 320px;
+  max-width: 420px;
+}
+
+.search-input-container .search-input {
+  width: 100%;
+  max-width: none;
+  padding-right: 44px;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: var(--border);
+  color: var(--text-secondary);
+  border-radius: 50%;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.clear-search-btn:hover {
+  background: var(--accent);
+  color: #fff;
 }
 
 /* Status messages */
@@ -433,4 +507,99 @@ body {
   background: var(--surface);
   color: var(--text-primary);
   padding: 10px;
+}
+
+.skeleton-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+.skeleton-poster {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-hover) 50%, var(--surface) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-hover) 50%, var(--surface) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-title {
+  width: 80%;
+}
+
+.skeleton-subtitle {
+  width: 50%;
+  height: 10px;
+}
+
+.skeleton-button {
+  width: 100%;
+  height: 34px;
+  margin-top: 14px;
+  border-radius: 10px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  color: var(--text-primary);
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  animation: toast-in 0.25s ease;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.surprise-btn {
+  margin-left: auto;
+  background: rgba(108, 92, 231, 0.15);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.surprise-btn:hover {
+  background: var(--accent);
+  color: #fff;
 }

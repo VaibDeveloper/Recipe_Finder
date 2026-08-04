@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import RecipeCard from "../components/RecipeCard";
 import type { Recipe, CategoryListResponse } from "../types/Recipe";
 import { useFavorites } from "../hooks/useFavorites";
+import SkeletonCard from "../components/SkeletonCard";
 
 function Home() {
   const [query, setQuery] = useState("");
@@ -77,13 +78,24 @@ function Home() {
   return (
     <div>
       <div className="search-wrapper">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search recipes..."
-          className="search-input"
-        />
+        <div className="search-input-container">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search recipes..."
+            className="search-input"
+          />
+          {query.length > 0 && (
+            <button
+              className="clear-search-btn"
+              onClick={() => setQuery("")}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
 
         <select
           value={category}
@@ -100,12 +112,13 @@ function Home() {
       </div>
 
       {loading && (
-        <div className="status-message">
-          <div className="spinner"></div>
-          <p>Loading recipes...</p>
+        <div className="movie-grid">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       )}
-
+      
       {error && (
         <div className="error-message">
           <span>⚠</span>

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { Recipe } from "../types/Recipe";
+import { useToast } from "../context/ToastContext";
 
 type RecipeCardProps = {
   recipe: Recipe;
@@ -9,6 +10,13 @@ type RecipeCardProps = {
 
 function RecipeCard({ recipe, isFavorite, onToggleFavorite }: RecipeCardProps) {
   const navigate = useNavigate();
+  const { showToast } = useToast();
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggleFavorite(recipe.id);
+    showToast(isFavorite ? "Removed from favorites" : "Added to favorites");
+  };
 
   return (
     <div className="movie-card" onClick={() => navigate(`/recipe/${recipe.id}`)}>
@@ -17,10 +25,7 @@ function RecipeCard({ recipe, isFavorite, onToggleFavorite }: RecipeCardProps) {
       <p>{recipe.category}</p>
       <button
         className={isFavorite ? "favorited" : ""}
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggleFavorite(recipe.id);
-        }}
+        onClick={handleFavoriteClick}
       >
         {isFavorite ? "★ Favorited" : "☆ Add to favorites"}
       </button>
