@@ -24,7 +24,7 @@ function Navbar() {
     <nav className="navbar">
       <Link to="/" className="brand">
         <span className="brand-icon">🍳</span>
-        <span className="brand-name">Recipe Finder</span>
+        <span className="brand-name">Foodie</span>
       </Link>
 
       <div className="nav-links">
