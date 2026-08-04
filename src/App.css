@@ -143,7 +143,7 @@ body {
   align-items: center;
   gap: 20px;
   padding: 40px 16px 24px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .search-input {
@@ -302,7 +302,7 @@ body {
   min-height: 32px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: color-mix(in srgb, var(--bg) 70%, var(--surface));
   padding: 0;
   cursor: pointer;
   display: flex;
@@ -311,6 +311,7 @@ body {
   transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   z-index: 2;
   flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 .favorite-icon-btn span {
@@ -321,7 +322,7 @@ body {
   height: 100%;
   font-size: 1rem;
   line-height: 1;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .favorite-icon-btn:hover {
@@ -360,10 +361,11 @@ body {
   }
 
   .card-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+    flex:1;
   }
 
   .movie-card h3,
@@ -372,9 +374,10 @@ body {
   }
 
   .movie-card h3 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
   }
 
   .favorite-icon-btn {
@@ -723,5 +726,16 @@ html, body {
 
   .surprise-btn span {
     display: none;
+  }
+}
+
+@media (max-width:480px){
+  .search-input-container,
+  .search-input{
+    width:100%;
+    max-width:100%;
+  }
+  .category-select{
+    width:180px;
   }
 }
