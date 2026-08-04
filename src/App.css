@@ -13,16 +13,16 @@
 }
 
 [data-theme="light"] {
-  --bg: #eeeade;
-  --surface: #eeeade;
-  --surface-hover: #f0f0f3;
-  --border: #e2e2e8;
-  --text-primary: #1a1d24;
-  --text-secondary: #6b7280;
+  --bg: #eeeeef;
+  --surface: #f7f6f4;
+  --surface-hover: #efeeec;
+  --border: #dcdad5;
+  --text-primary: #232323;
+  --text-secondary: #6b6b6b;
   --accent: #6c5ce7;
   --accent-hover: #5a4bd4;
-  --danger: #e74c3c;
-  --danger-bg: #fdecea;
+  --danger: #d64541;
+  --danger-bg: #f6e6e5;
 }
 
 body, .movie-card, .navbar, .search-input, .category-select {
@@ -165,7 +165,7 @@ body {
 
 .search-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .search-input-container {
@@ -239,7 +239,7 @@ body {
   background: var(--danger-bg);
   border: 1px solid rgba(231, 76, 60, 0.4);
   border-radius: var(--radius);
-  color: #ff8478;
+  color: var(--danger);
   font-size: 0.9rem;
 }
 
@@ -310,7 +310,7 @@ body {
 }
 
 .movie-card button.favorited {
-  background: rgba(108, 92, 231, 0.15);
+  background: color-mix(in srgb, var(--accent) 15%, var(--surface));
   border-color: var(--accent);
   color: var(--accent);
 }
@@ -356,7 +356,7 @@ body {
 
 .recipe-category-tag {
   display: inline-block;
-  background: rgba(108, 92, 231, 0.15);
+  background: color-mix(in srgb, var(--accent) 15%, var(--surface));
   color: var(--accent);
   font-size: 0.75rem;
   font-weight: 600;
@@ -388,6 +388,7 @@ body {
   font-size: 1.8rem;
   font-weight: 600;
   line-height: 1.25;
+  color: var(--text-primary);
 }
 
 .recipe-meta {
@@ -409,7 +410,7 @@ body {
 }
 
 .youtube-link:hover {
-  background: rgba(108, 92, 231, 0.15);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .recipe-body {
@@ -536,7 +537,7 @@ body {
 
 .category-select:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .category-select:disabled {
@@ -616,11 +617,10 @@ body {
   padding: 12px 24px;
   border-radius: 999px;
   font-size: 0.9rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   z-index: 100;
   animation: toast-in 0.25s ease;
 }
-
 @keyframes toast-in {
   from {
     opacity: 0;
@@ -634,7 +634,7 @@ body {
 
 .surprise-btn {
   margin-left: auto;
-  background: rgba(108, 92, 231, 0.15);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
   border: 1px solid var(--accent);
   color: var(--accent);
   padding: 8px 16px;
