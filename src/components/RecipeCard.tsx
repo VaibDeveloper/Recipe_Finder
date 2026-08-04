@@ -28,8 +28,10 @@ function RecipeCard({ recipe, isFavorite, onToggleFavorite }: RecipeCardProps) {
         <span>{isFavorite ? "★" : "☆"}</span>
       </button>
       <img src={recipe.thumbnail} alt={recipe.name} className="movie-poster" />
-      <h3>{recipe.name}</h3>
-      <p>{recipe.category}</p>
+      <div className="card-text">
+        <h3>{recipe.name}</h3>
+        <p>{recipe.category}</p>
+      </div>
     </div>
   );
 }
