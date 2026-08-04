@@ -13,8 +13,8 @@
 }
 
 [data-theme="light"] {
-  --bg: #f7f7f9;
-  --surface: #ffffff;
+  --bg: #eeeade;
+  --surface: #eeeade;
   --surface-hover: #f0f0f3;
   --border: #e2e2e8;
   --text-primary: #1a1d24;
