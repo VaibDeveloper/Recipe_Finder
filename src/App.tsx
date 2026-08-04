@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, NavLink, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, NavLink, Link, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import RecipeDetail from "./pages/RecipeDetail";
@@ -22,18 +22,28 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
-        Home
-      </NavLink>
-      <NavLink to="/favorites" className={({ isActive }) => (isActive ? "active" : "")}>
-        Favorites
-      </NavLink>
-      <button className="surprise-btn" onClick={handleSurpriseMe}>
-        🎲 Surprise Me
-      </button>
-      <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle theme">
-        {theme === "dark" ? "☀️" : "🌙"}
-      </button>
+      <Link to="/" className="brand">
+        <span className="brand-icon">🍳</span>
+        <span className="brand-name">Recipe Finder</span>
+      </Link>
+
+      <div className="nav-links">
+        <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
+          Home
+        </NavLink>
+        <NavLink to="/favorites" className={({ isActive }) => (isActive ? "active" : "")}>
+          Favorites
+        </NavLink>
+      </div>
+
+      <div className="nav-actions">
+        <button className="surprise-btn" onClick={handleSurpriseMe}>
+          🎲 Surprise Me
+        </button>
+        <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle theme">
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
+      </div>
     </nav>
   );
 }

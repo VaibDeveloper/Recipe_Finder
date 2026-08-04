@@ -64,8 +64,9 @@ body {
 .navbar {
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding: 18px 32px;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 32px;
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
@@ -74,20 +75,65 @@ body {
   z-index: 10;
 }
 
-.navbar a {
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brand-icon {
+  font-size: 1.4rem;
+}
+
+.brand-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+  flex: 1;
+}
+
+.nav-links a {
   text-decoration: none;
   color: var(--text-secondary);
   font-weight: 500;
   font-size: 0.95rem;
   transition: color 0.15s ease;
+  position: relative;
+  padding-bottom: 4px;
 }
 
-.navbar a:hover {
+.nav-links a:hover {
   color: var(--text-primary);
 }
 
-.navbar a.active {
+.nav-links a.active {
   color: var(--accent);
+}
+
+.nav-links a.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 /* Search */
