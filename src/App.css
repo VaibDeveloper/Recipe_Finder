@@ -649,3 +649,38 @@ body {
   background: var(--accent);
   color: #fff;
 }
+
+/* Global safety net against horizontal overflow */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Mobile navbar */
+@media (max-width: 640px) {
+  .navbar {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .brand {
+    order: 1;
+  }
+
+  .nav-actions {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .nav-links {
+    order: 3;
+    flex: 1 1 100%;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .surprise-btn span {
+    display: none;
+  }
+}
