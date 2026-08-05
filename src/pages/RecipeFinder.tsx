@@ -4,7 +4,7 @@ import type { Recipe, CategoryListResponse } from "../types/Recipe";
 import { useFavorites } from "../hooks/useFavorites";
 import SkeletonCard from "../components/SkeletonCard";
 
-function Home() {
+function RecipeFinder() {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [category, setCategory] = useState("all");
@@ -152,4 +152,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default RecipeFinder;

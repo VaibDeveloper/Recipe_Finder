@@ -1,12 +1,6 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  NavLink,
-  Link,
-  useNavigate,
-} from "react-router-dom";
-import Home from "./pages/Home";
+import { BrowserRouter, Routes, Route, NavLink, Link, useNavigate } from "react-router-dom";
+import Landing from "./pages/Landing";
+import RecipeFinder from "./pages/RecipeFinder";
 import Favorites from "./pages/Favorites";
 import RecipeDetail from "./pages/RecipeDetail";
 import { ToastProvider } from "./context/ToastContext";
@@ -37,17 +31,13 @@ function Navbar() {
       <span className="nav-divider" aria-hidden="true"></span>
 
       <div className="nav-links">
-        <NavLink
-          to="/"
-          end
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
+        <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
           Home
         </NavLink>
-        <NavLink
-          to="/favorites"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
+        <NavLink to="/recipes" className={({ isActive }) => (isActive ? "active" : "")}>
+          Explore
+        </NavLink>
+        <NavLink to="/favorites" className={({ isActive }) => (isActive ? "active" : "")}>
           Favorites
         </NavLink>
       </div>
@@ -58,11 +48,7 @@ function Navbar() {
         <button className="surprise-btn" onClick={handleSurpriseMe}>
           🎲 <span>Surprise Me</span>
         </button>
-        <button
-          className="theme-toggle-btn"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-        >
+        <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle theme">
           {theme === "dark" ? "☀️" : "🌙"}
         </button>
       </div>
@@ -77,7 +63,8 @@ function App() {
         <BrowserRouter>
           <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/recipes" element={<RecipeFinder />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/recipe/:id" element={<RecipeDetail />} />
           </Routes>
