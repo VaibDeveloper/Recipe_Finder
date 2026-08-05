@@ -3,6 +3,7 @@ import RecipeCard from "../components/RecipeCard";
 import type { Recipe } from "../types/Recipe";
 import { useFavorites } from "../hooks/useFavorites";
 
+
 function Favorites() {
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
