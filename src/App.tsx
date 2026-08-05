@@ -31,8 +31,10 @@ function Navbar() {
     <nav className="navbar">
       <Link to="/" className="brand">
         <span className="brand-icon">🍳</span>
-        <span className="brand-name">Foodie</span>
+        <span className="brand-name">Foodie - Recipe Finder</span>
       </Link>
+
+      <span className="nav-divider" aria-hidden="true"></span>
 
       <div className="nav-links">
         <NavLink
@@ -49,6 +51,8 @@ function Navbar() {
           Favorites
         </NavLink>
       </div>
+
+      <span className="nav-divider" aria-hidden="true"></span>
 
       <div className="nav-actions">
         <button className="surprise-btn" onClick={handleSurpriseMe}>

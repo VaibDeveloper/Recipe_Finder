@@ -6,6 +6,8 @@ import type {
   RawMealDetail,
 } from "../types/Recipe";
 import SkeletonCard from "../components/SkeletonCard";
+import { useFavorites } from "../hooks/useFavorites";
+import { useToast } from "../context/ToastContext";
 
 function extractIngredients(meal: RawMealDetail) {
   const ingredients: { name: string; measure: string }[] = [];
@@ -30,13 +32,23 @@ function formatInstructions(raw: string) {
   const steps: string[] = [];
 
   for (const line of rawLines) {
-    // Skip standalone "STEP 1", "Step 2:" etc. labels with no real content
+    // Skip standalone "STEP 1", "Step 2:", "STEP 3 -" labels with no real content
     if (/^step\s*\d+\s*[:.-]?$/i.test(line)) {
       continue;
     }
 
-    // Strip existing manual numbering like "1)" "2." "3 -" from the start
-    const cleaned = line.replace(/^\d+\s*[).:-]\s*/, "");
+    let cleaned = line;
+
+    // Strip leading numbering: "1)", "1.", "1:", "1 -", "(1)"
+    cleaned = cleaned.replace(/^\(?\d+\)?\s*[).:\-]?\s*/, "");
+
+    // Strip leading bullet symbols: "-", "*", "•"
+    cleaned = cleaned.replace(/^[-*•]\s*/, "");
+
+    // Strip a leading "STEP N:" prefix that's attached to real content on the same line
+    cleaned = cleaned.replace(/^step\s*\d+\s*[:.-]?\s*/i, "");
+
+    cleaned = cleaned.trim();
 
     if (cleaned.length > 0) {
       steps.push(cleaned);
@@ -51,6 +63,8 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState<RecipeDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const { showToast } = useToast();
 
   useEffect(() => {
     setLoading(true);
@@ -106,11 +120,31 @@ function RecipeDetail() {
   return (
     <div className="recipe-detail">
       <div className="recipe-header">
-        <img
-          src={recipe.thumbnail}
-          alt={recipe.name}
-          className="recipe-detail-img"
-        />
+        <div className="recipe-img-wrapper">
+          <img
+            src={recipe.thumbnail}
+            alt={recipe.name}
+            className="recipe-detail-img"
+          />
+          <button
+            className={`favorite-icon-btn detail-favorite-btn ${isFavorite(recipe.id) ? "favorited" : ""}`}
+            onClick={() => {
+              toggleFavorite(recipe.id);
+              showToast(
+                isFavorite(recipe.id)
+                  ? "Removed from favorites"
+                  : "Added to favorites",
+              );
+            }}
+            aria-label={
+              isFavorite(recipe.id)
+                ? "Remove from favorites"
+                : "Add to favorites"
+            }
+          >
+            <span>{isFavorite(recipe.id) ? "★" : "☆"}</span>
+          </button>
+        </div>
         <div>
           <span className="recipe-category-tag">{recipe.category}</span>
           <h1>{recipe.name}</h1>
