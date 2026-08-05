@@ -5,7 +5,6 @@ import type {
   MealDetailResponse,
   RawMealDetail,
 } from "../types/Recipe";
-import SkeletonCard from "../components/SkeletonCard";
 import { useFavorites } from "../hooks/useFavorites";
 import { useToast } from "../context/ToastContext";
 import { useAiDescription } from "../hooks/useAiDescription";
