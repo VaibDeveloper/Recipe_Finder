@@ -63,7 +63,7 @@ function formatInstructions(raw: string) {
 function RecipeDetail() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState<RecipeDetailType | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { showToast } = useToast();
@@ -76,6 +76,7 @@ function RecipeDetail() {
   );
 
   useEffect(() => {
+    if (!id) return;
     setLoading(true);
     setError(null);
 
@@ -107,10 +108,9 @@ function RecipeDetail() {
 
   if (loading) {
     return (
-      <div className="movie-grid">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <SkeletonCard key={i} />
-        ))}
+      <div className="status-message">
+        <div className="spinner"></div>
+        <p>Loading recipe...</p>
       </div>
     );
   }

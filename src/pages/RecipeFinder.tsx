@@ -13,7 +13,7 @@ function RecipeFinder() {
   const [category, setCategory] = useState("all");
   const [categories, setCategories] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toggleFavorite, isFavorite } = useFavorites();
 
