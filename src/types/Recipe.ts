@@ -63,3 +63,7 @@ export type FilterMeal = {
 export type CategoryFilterResponse = {
   meals: FilterMeal[] | null;
 };
+
+export type IngredientFilterResponse = {
+  meals: FilterMeal[] | null;
+};

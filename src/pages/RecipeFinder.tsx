@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import RecipeCard from "../components/RecipeCard";
-import type { Recipe, CategoryListResponse } from "../types/Recipe";
+import type { Recipe, CategoryListResponse, IngredientFilterResponse } from "../types/Recipe";
 import { useFavorites } from "../hooks/useFavorites";
 import SkeletonCard from "../components/SkeletonCard";
 
+type SearchMode = "name" | "ingredients";
+
 function RecipeFinder() {
+  const [mode, setMode] = useState<SearchMode>("name");
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [category, setCategory] = useState("all");
@@ -36,7 +39,10 @@ function RecipeFinder() {
     return () => clearTimeout(timer);
   }, [query]);
 
+  // Name / category search — original logic, untouched, only gated by mode
   useEffect(() => {
+    if (mode !== "name") return;
+
     setLoading(true);
     setError(null);
 
@@ -73,17 +79,91 @@ function RecipeFinder() {
         setError("Failed to load recipes.");
         setLoading(false);
       });
-  }, [debouncedQuery, category]);
+  }, [debouncedQuery, category, mode]);
+
+  // Ingredient search — new branch, runs only in "ingredients" mode
+  useEffect(() => {
+    if (mode !== "ingredients") return;
+
+    const ingredients = debouncedQuery
+      .split(",")
+      .map((item) => item.trim().toLowerCase())
+      .filter((item) => item.length > 0);
+
+    if (ingredients.length === 0) {
+      setRecipes([]);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    Promise.all(
+      ingredients.map((ingredient) =>
+        fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`)
+          .then((res) => res.json())
+          .then((data: IngredientFilterResponse) => data.meals ?? [])
+      )
+    )
+      .then((responses) => {
+        const idSets = responses.map((mealList) => new Set(mealList.map((meal) => meal.idMeal)));
+        const firstList = responses[0];
+        const commonMeals = firstList.filter((meal) =>
+          idSets.every((idSet) => idSet.has(meal.idMeal))
+        );
+
+        const formatted: Recipe[] = commonMeals.map((meal) => ({
+          id: meal.idMeal,
+          name: meal.strMeal,
+          thumbnail: meal.strMealThumb,
+          category: "",
+        }));
+
+        setRecipes(formatted);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to search by ingredients.");
+        setLoading(false);
+      });
+  }, [debouncedQuery, mode]);
+
+  function handleModeChange(newMode: SearchMode) {
+    setMode(newMode);
+    setQuery("");
+    setDebouncedQuery("");
+    setCategory("all");
+    setRecipes([]);
+  }
 
   return (
     <div>
+      <div className="mode-toggle">
+        <button
+          className={mode === "name" ? "active" : ""}
+          onClick={() => handleModeChange("name")}
+        >
+          By Name
+        </button>
+        <button
+          className={mode === "ingredients" ? "active" : ""}
+          onClick={() => handleModeChange("ingredients")}
+        >
+          By Ingredients
+        </button>
+      </div>
+
       <div className="search-wrapper">
         <div className="search-input-container">
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search recipes..."
+            placeholder={
+              mode === "name" ? "Search recipes..." : "e.g. chicken, garlic, onion"
+            }
             className="search-input"
           />
           {query.length > 0 && (
@@ -97,19 +177,25 @@ function RecipeFinder() {
           )}
         </div>
 
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="category-select"
-        >
-          <option value="all">All categories</option>
-          {categories.map((name) => (
-            <option key={name} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
+        {mode === "name" && (
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="category-select"
+          >
+            <option value="all">All categories</option>
+            {categories.map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
+
+      {mode === "ingredients" && (
+        <p className="mode-hint">Separate multiple ingredients with commas</p>
+      )}
 
       {loading && (
         <div className="movie-grid">
@@ -118,7 +204,7 @@ function RecipeFinder() {
           ))}
         </div>
       )}
-      
+
       {error && (
         <div className="error-message">
           <span>⚠</span>
@@ -129,9 +215,13 @@ function RecipeFinder() {
       {!loading && !error && recipes.length === 0 && (
         <div className="status-message">
           <p>
-            {category === "all" && debouncedQuery.trim() === ""
-              ? "Start typing to search for recipes, or pick a category."
-              : "No recipes found. Try a different search or category."}
+            {mode === "name"
+              ? category === "all" && debouncedQuery.trim() === ""
+                ? "Start typing to search for recipes, or pick a category."
+                : "No recipes found. Try a different search or category."
+              : debouncedQuery.trim() === ""
+              ? "Enter ingredients you have, separated by commas."
+              : "No recipes found using all of those ingredients together."}
           </p>
         </div>
       )}

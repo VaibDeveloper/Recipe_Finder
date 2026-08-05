@@ -8,6 +8,8 @@ import type {
 import SkeletonCard from "../components/SkeletonCard";
 import { useFavorites } from "../hooks/useFavorites";
 import { useToast } from "../context/ToastContext";
+import { useAiDescription } from "../hooks/useAiDescription";
+import RecipeChat from "../components/RecipeChat";
 
 function extractIngredients(meal: RawMealDetail) {
   const ingredients: { name: string; measure: string }[] = [];
@@ -65,6 +67,13 @@ function RecipeDetail() {
   const [error, setError] = useState<string | null>(null);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { showToast } = useToast();
+
+  const { description, loading: aiLoading } = useAiDescription(
+    recipe?.id ?? "",
+    recipe?.name ?? "",
+    recipe?.category ?? "",
+    recipe?.area ?? "",
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -149,6 +158,12 @@ function RecipeDetail() {
           <span className="recipe-category-tag">{recipe.category}</span>
           <h1>{recipe.name}</h1>
           <p className="recipe-meta">{recipe.area} cuisine</p>
+          {aiLoading && (
+            <p className="ai-description ai-loading">
+              Generating description...
+            </p>
+          )}
+          {description && <p className="ai-description">{description}</p>}
           {recipe.youtube && (
             <a
               href={recipe.youtube}
@@ -184,7 +199,11 @@ function RecipeDetail() {
           </ol>
         </div>
       </div>
-
+      <RecipeChat
+        recipeName={recipe.name}
+        ingredients={recipe.ingredients}
+        instructions={recipe.instructions}
+      />
       <div className="back-link-wrapper">
         <Link to="/" className="back-link">
           ← Back to recipes
