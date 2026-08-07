@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useFavorites} from "../hooks/useFavorites";
+import { useToast } from "../context/ToastContext";
 
 type GeneratedRecipe = {
+  id: string;
   name: string;
   description: string;
   prepTime: string;
@@ -15,6 +18,8 @@ function LeftoverRescue() {
   const [recipe, setRecipe] = useState<GeneratedRecipe | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { toggleAiFavorite, isFavorite } = useFavorites();
+  const { showToast } = useToast();
 
   async function generateRecipe() {
     const trimmed = input.trim();
@@ -28,19 +33,21 @@ function LeftoverRescue() {
       const groqKey = import.meta.env.VITE_GROQ_API_KEY;
       const unsplashKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
-      const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${groqKey}`,
-        },
-        body: JSON.stringify({
-          model: "llama-3.1-8b-instant",
-          max_tokens: 700,
-          messages: [
-            {
-              role: "system",
-              content: `You are a creative chef who makes delicious meals from available ingredients.
+      const groqResponse = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${groqKey}`,
+          },
+          body: JSON.stringify({
+            model: "llama-3.1-8b-instant",
+            max_tokens: 700,
+            messages: [
+              {
+                role: "system",
+                content: `You are a creative chef who makes delicious meals from available ingredients.
 You MUST respond with ONLY valid JSON, no other text:
 {
   "name": "Recipe Name",
@@ -54,14 +61,15 @@ You MUST respond with ONLY valid JSON, no other text:
   ],
   "steps": ["Step 1", "Step 2", "Step 3"]
 }`,
-            },
-            {
-              role: "user",
-              content: `I have these ingredients: ${trimmed}. Generate a creative recipe.`,
-            },
-          ],
-        }),
-      });
+              },
+              {
+                role: "user",
+                content: `I have these ingredients: ${trimmed}. Generate a creative recipe.`,
+              },
+            ],
+          }),
+        },
+      );
 
       const groqData = await groqResponse.json();
       const rawText = groqData.choices?.[0]?.message?.content?.trim();
@@ -73,7 +81,7 @@ You MUST respond with ONLY valid JSON, no other text:
       try {
         const unsplashResponse = await fetch(
           `https://api.unsplash.com/search/photos?query=${encodeURIComponent(parsed.searchQuery)}&per_page=1&orientation=landscape`,
-          { headers: { Authorization: `Client-ID ${unsplashKey}` } }
+          { headers: { Authorization: `Client-ID ${unsplashKey}` } },
         );
         const unsplashData = await unsplashResponse.json();
         imageUrl = unsplashData.results?.[0]?.urls?.regular ?? null;
@@ -82,6 +90,7 @@ You MUST respond with ONLY valid JSON, no other text:
       }
 
       setRecipe({
+        id: `ai-${Date.now()}`,
         name: parsed.name,
         description: parsed.description,
         prepTime: parsed.prepTime,
@@ -114,7 +123,10 @@ You MUST respond with ONLY valid JSON, no other text:
           <div className="leftover-intro">
             <span className="hero-eyebrow">AI-powered</span>
             <h1>Leftover Rescue</h1>
-            <p>Tell us what's in your fridge — we'll invent a recipe just for you.</p>
+            <p>
+              Tell us what's in your fridge — we'll invent a recipe just for
+              you.
+            </p>
           </div>
 
           <div className="leftover-input-section">
@@ -156,15 +168,47 @@ You MUST respond with ONLY valid JSON, no other text:
       {recipe && (
         <div className="recipe-detail">
           <div className="recipe-header">
-            {recipe.imageUrl ? (
-              <img
-                src={recipe.imageUrl}
-                alt={recipe.name}
-                className="recipe-detail-img"
-              />
-            ) : (
-              <div className="recipe-detail-img recipe-img-placeholder">🍳</div>
-            )}
+            <div className="recipe-img-wrapper">
+              {recipe.imageUrl ? (
+                <img
+                  src={recipe.imageUrl}
+                  alt={recipe.name}
+                  className="recipe-detail-img"
+                />
+              ) : (
+                <div className="recipe-detail-img recipe-img-placeholder">
+                  🍳
+                </div>
+              )}
+              <button
+                className={`favorite-icon-btn detail-favorite-btn ${isFavorite(recipe.id) ? "favorited" : ""}`}
+                onClick={() => {
+                  toggleAiFavorite({
+                    id: recipe.id,
+                    name: recipe.name,
+                    description: recipe.description,
+                    prepTime: recipe.prepTime,
+                    difficulty: recipe.difficulty,
+                    ingredients: recipe.ingredients,
+                    steps: recipe.steps,
+                    imageUrl: recipe.imageUrl,
+                  });
+                  showToast(
+                    isFavorite(recipe.id)
+                      ? "Removed from favorites"
+                      : "Added to favorites",
+                  );
+                }}
+                aria-label={
+                  isFavorite(recipe.id)
+                    ? "Remove from favorites"
+                    : "Add to favorites"
+                }
+              >
+                <span>{isFavorite(recipe.id) ? "★" : "☆"}</span>
+              </button>
+            </div>
+
             <div>
               <span className="recipe-category-tag">AI Generated</span>
               <h1>{recipe.name}</h1>

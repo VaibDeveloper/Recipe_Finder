@@ -18,8 +18,16 @@ function RecipeCard({ recipe, isFavorite, onToggleFavorite }: RecipeCardProps) {
     showToast(isFavorite ? "Removed from favorites" : "Added to favorites");
   };
 
+  const handleCardClick = () => {
+    if (recipe.id.startsWith("ai-")) return;
+    navigate(`/recipe/${recipe.id}`);
+  };
+
   return (
-    <div className="movie-card" onClick={() => navigate(`/recipe/${recipe.id}`)}>
+    <div
+      className={`movie-card ${recipe.id.startsWith("ai-") ? "ai-card" : ""}`}
+      onClick={handleCardClick}
+    >
       <button
         className={`favorite-icon-btn ${isFavorite ? "favorited" : ""}`}
         onClick={handleFavoriteClick}
@@ -27,7 +35,11 @@ function RecipeCard({ recipe, isFavorite, onToggleFavorite }: RecipeCardProps) {
       >
         <span>{isFavorite ? "★" : "☆"}</span>
       </button>
-      <img src={recipe.thumbnail} alt={recipe.name} className="movie-poster" />
+      {recipe.thumbnail ? (
+        <img src={recipe.thumbnail} alt={recipe.name} className="movie-poster" />
+      ) : (
+        <div className="movie-poster ai-poster-placeholder">🍳</div>
+      )}
       <div className="card-text">
         <h3>{recipe.name}</h3>
         <p>{recipe.category}</p>
