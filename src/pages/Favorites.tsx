@@ -6,7 +6,13 @@ import { useFavorites } from "../hooks/useFavorites";
 type FavoriteFilter = "all" | "normal" | "ai";
 
 function Favorites() {
-  const { favoriteIds, aiRecipes, toggleFavorite, toggleAiFavorite, isFavorite } = useFavorites();
+  const {
+    favoriteIds,
+    aiRecipes,
+    toggleFavorite,
+    toggleAiFavorite,
+    isFavorite,
+  } = useFavorites();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [fetching, setFetching] = useState(false);
   const [filter, setFilter] = useState<FavoriteFilter>("all");
@@ -24,8 +30,8 @@ function Favorites() {
       favoriteIds.map((id) =>
         fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
           .then((res) => res.json())
-          .then((data) => data.meals[0])
-      )
+          .then((data) => data.meals[0]),
+      ),
     ).then((meals) => {
       const formatted: Recipe[] = meals.map((meal) => ({
         id: meal.idMeal,
@@ -51,9 +57,10 @@ function Favorites() {
     filter === "all" ? allRecipes : filter === "ai" ? aiCards : recipes;
 
   const filteredRecipes = searchQuery.trim()
-    ? categoryFiltered.filter((r) =>
-        r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.category.toLowerCase().includes(searchQuery.toLowerCase())
+    ? categoryFiltered.filter(
+        (r) =>
+          r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          r.category.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : categoryFiltered;
 
@@ -86,25 +93,6 @@ function Favorites() {
   return (
     <div>
       <div className="favorites-header">
-        <div className="search-input-container favorites-search">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search your favorites..."
-            className="search-input"
-          />
-          {searchQuery.length > 0 && (
-            <button
-              className="clear-search-btn"
-              onClick={() => setSearchQuery("")}
-              aria-label="Clear search"
-            >
-              ×
-            </button>
-          )}
-        </div>
-
         <div className="favorites-filter">
           <button
             className={filter === "all" ? "active" : ""}
@@ -125,6 +113,24 @@ function Favorites() {
             🤖 AI Created ({aiCards.length})
           </button>
         </div>
+        <div className="search-input-container favorites-search">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search your favorites..."
+            className="search-input"
+          />
+          {searchQuery.length > 0 && (
+            <button
+              className="clear-search-btn"
+              onClick={() => setSearchQuery("")}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
       {filteredRecipes.length === 0 ? (
@@ -133,8 +139,8 @@ function Favorites() {
             {searchQuery.trim()
               ? `No favorites matching "${searchQuery}".`
               : filter === "ai"
-              ? "No AI generated recipes saved yet — try Leftover Rescue!"
-              : "No classic recipes saved yet — explore and favorite some!"}
+                ? "No AI generated recipes saved yet — try Leftover Rescue!"
+                : "No classic recipes saved yet — explore and favorite some!"}
           </p>
         </div>
       ) : (
