@@ -6,14 +6,23 @@ function Landing() {
   return (
     <div className="landing">
       <section className="hero">
+        <div className="aurora-bg">
+          <div className="aurora-base"></div>
+          <div className="aurora-wave aurora-wave-1"></div>
+          <div className="aurora-wave aurora-wave-2"></div>
+          <div className="aurora-wave aurora-wave-3"></div>
+          <div className="aurora-wave aurora-wave-4"></div>
+          <div className="aurora-depth"></div>
+        </div>
+
         <div className="hero-content">
           <span className="hero-eyebrow">Discover · Cook · Save</span>
           <h1 className="hero-title">
             Find your next <span className="hero-highlight">favorite meal</span>
           </h1>
           <p className="hero-subtitle">
-            Search thousands of recipes from around the world, save the ones you love,
-            and never wonder "what's for dinner" again.
+            Search thousands of recipes from around the world, save the ones
+            you love, and never wonder "what's for dinner" again.
           </p>
           <Link to="/recipes" className="explore-btn">
             Explore Recipes

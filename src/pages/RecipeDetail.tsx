@@ -41,6 +41,7 @@ function formatInstructions(raw: string) {
     let cleaned = line;
 
     // Strip leading numbering: "1)", "1.", "1:", "1 -", "(1)"
+    // eslint-disable-next-line no-useless-escape
     cleaned = cleaned.replace(/^\(?\d+\)?\s*[).:\-]?\s*/, "");
 
     // Strip leading bullet symbols: "-", "*", "•"
