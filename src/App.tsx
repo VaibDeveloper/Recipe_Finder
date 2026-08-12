@@ -80,7 +80,7 @@ function Navbar() {
           onClick={handleSurpriseMe}
           disabled={surpriseLoading}
         >
-          {surpriseLoading ? "..." : "🎲"} <span>Surprise Me</span>
+          🎲 <span>{surpriseLoading ? "Finding..." : "Surprise Me"}</span>
         </button>
         <button
           className="theme-toggle-btn"

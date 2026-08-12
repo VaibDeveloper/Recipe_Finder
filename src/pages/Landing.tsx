@@ -1,24 +1,89 @@
 import { Link } from "react-router-dom";
 
+const FOOD_IMAGES = [
+  {
+    src: "https://b.zmtcdn.com/data/o2_assets/110a09a9d81f0e5305041c1b507d0f391743058910.png",
+    alt: "Cheeseburger",
+    className: "food-img food-img-1",
+  },
+  {
+    src: "https://b.zmtcdn.com/data/o2_assets/b4f62434088b0ddfa9b370991f58ca601743060218.png",
+    alt: "Dumplings",
+    className: "food-img food-img-2",
+  },
+  {
+    src: "https://b.zmtcdn.com/data/o2_assets/316495f4ba2a9c9d9aa97fed9fe61cf71743059024.png",
+    alt: "Pizza slice",
+    className: "food-img food-img-3",
+  },
+  {
+    src: "https://b.zmtcdn.com/data/o2_assets/70b50e1a48a82437bfa2bed925b862701742892555.png",
+    alt: "Basil leaf",
+    className: "food-img food-img-4",
+  },
+  {
+    src: "https://b.zmtcdn.com/data/o2_assets/9ef1cc6ecf1d92798507ffad71e9492d1742892584.png",
+    alt: "Tomato slice",
+    className: "food-img food-img-5",
+  },
+  {
+    src: "https://b.zmtcdn.com/data/o2_assets/9ef1cc6ecf1d92798507ffad71e9492d1742892584.png",
+    alt: "Tomato slice 2",
+    className: "food-img food-img-6",
+  },
+];
+
 const FOOD_EMOJIS = ["🍕", "🍜", "🍣", "🥗", "🍔", "🌮", "🍝", "🍩", "🥘", "🍛", "🍤", "🥞"];
 
 function Landing() {
   return (
     <div className="landing">
       <section className="hero">
-        <div className="aurora-bg">
-          <div className="aurora-base"></div>
-          <div className="aurora-wave aurora-wave-1"></div>
-          <div className="aurora-wave aurora-wave-2"></div>
-          <div className="aurora-wave aurora-wave-3"></div>
-          <div className="aurora-wave aurora-wave-4"></div>
-          <div className="aurora-depth"></div>
-        </div>
+        <svg
+          className="hero-swirl hero-swirl-tl"
+          width="600" height="600"
+          viewBox="0 0 600 600"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M515.266 181.33C377.943 51.564 128.537 136.256 50.8123 293.565C-26.9127 450.874 125.728 600 125.728 600"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+          />
+        </svg>
 
+        <svg
+          className="hero-swirl hero-swirl-br"
+          width="700" height="700"
+          viewBox="0 0 700 700"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M26.8838 528.274C193.934 689.816 480.051 637.218 594.397 451.983C708.742 266.748 543.953 2.22235 543.953 2.22235"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+          />
+        </svg>
+
+        {/* Floating food images */}
+        {FOOD_IMAGES.map((img, i) => (
+          <img
+            key={i}
+            src={img.src}
+            alt={img.alt}
+            className={img.className}
+            style={{ animationDelay: `${i * 300}ms` }}
+          />
+        ))}
+
+        {/* Centered text content */}
         <div className="hero-content">
           <span className="hero-eyebrow">Discover · Cook · Save</span>
           <h1 className="hero-title">
-            Find your next <span className="hero-highlight">favorite meal</span>
+            Find your next{" "}
+            <span className="hero-highlight">favorite meal</span>
           </h1>
           <p className="hero-subtitle">
             Search thousands of recipes from around the world, save the ones
@@ -31,6 +96,7 @@ function Landing() {
         </div>
       </section>
 
+      {/* Food Marquee */}
       <div className="food-marquee">
         <div className="food-marquee-track">
           {[...FOOD_EMOJIS, ...FOOD_EMOJIS].map((emoji, i) => (
@@ -39,6 +105,7 @@ function Landing() {
         </div>
       </div>
 
+      {/* Feature Cards */}
       <section className="features">
         <div className="feature-card">
           <span className="feature-icon">🔍</span>
