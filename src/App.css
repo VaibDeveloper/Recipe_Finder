@@ -929,7 +929,7 @@ button.explore-btn:disabled {
 
   .detail-favorite-btn {
     position: absolute;
-    top: 20px;
+    top: 25px;
     left: 12px;
     right: auto;
     z-index: 10;
