@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ScrollVelocityMarquee from "../components/ScrollVelocityMarquee";
 
 const FOOD_IMAGES = [
   {
@@ -33,52 +34,24 @@ const FOOD_IMAGES = [
   },
 ];
 
-const FOOD_EMOJIS = ["🍕", "🍜", "🍣", "🥗", "🍔", "🌮", "🍝", "🍩", "🥘", "🍛", "🍤", "🥞"];
+const ROW_1 = ["Pizza", "Sushi", "Burger", "Pasta", "Tacos", "Ramen", "Curry", "Steak", "Dim Sum", "Paella"];
+const ROW_2 = ["Tiramisu", "Croissant", "Biryani", "Pho", "Risotto", "Gyoza", "Shawarma", "Pad Thai", "Lasagna", "Ceviche"];
 
 function Landing() {
   return (
     <div className="landing">
       <section className="hero">
-        <svg
-          className="hero-swirl hero-swirl-tl"
-          width="600" height="600"
-          viewBox="0 0 600 600"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M515.266 181.33C377.943 51.564 128.537 136.256 50.8123 293.565C-26.9127 450.874 125.728 600 125.728 600"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-          />
+        <svg className="hero-swirl hero-swirl-tl" width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M515.266 181.33C377.943 51.564 128.537 136.256 50.8123 293.565C-26.9127 450.874 125.728 600 125.728 600" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+        <svg className="hero-swirl hero-swirl-br" width="700" height="700" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M26.8838 528.274C193.934 689.816 480.051 637.218 594.397 451.983C708.742 266.748 543.953 2.22235 543.953 2.22235" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
 
-        <svg
-          className="hero-swirl hero-swirl-br"
-          width="700" height="700"
-          viewBox="0 0 700 700"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M26.8838 528.274C193.934 689.816 480.051 637.218 594.397 451.983C708.742 266.748 543.953 2.22235 543.953 2.22235"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-          />
-        </svg>
-
-        {/* Floating food images */}
         {FOOD_IMAGES.map((img, i) => (
-          <img
-            key={i}
-            src={img.src}
-            alt={img.alt}
-            className={img.className}
-            style={{ animationDelay: `${i * 300}ms` }}
-          />
+          <img key={i} src={img.src} alt={img.alt} className={img.className} style={{ animationDelay: `${i * 300}ms` }} />
         ))}
 
-        {/* Centered text content */}
         <div className="hero-content">
           <span className="hero-eyebrow">Discover · Cook · Save</span>
           <h1 className="hero-title">
@@ -96,16 +69,8 @@ function Landing() {
         </div>
       </section>
 
-      {/* Food Marquee */}
-      <div className="food-marquee">
-        <div className="food-marquee-track">
-          {[...FOOD_EMOJIS, ...FOOD_EMOJIS].map((emoji, i) => (
-            <span key={i} className="food-marquee-item">{emoji}</span>
-          ))}
-        </div>
-      </div>
+      <ScrollVelocityMarquee row1={ROW_1} row2={ROW_2} />
 
-      {/* Feature Cards */}
       <section className="features">
         <div className="feature-card">
           <span className="feature-icon">🔍</span>
