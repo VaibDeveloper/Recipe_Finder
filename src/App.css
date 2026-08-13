@@ -1,16 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap");
 
-/* ── Variables ─────────────────────────────── */
-
 :root {
   --bg: #080808;
   --surface: #111111;
-  --surface-hover: #1c1c1c;
-  --border: #2a2a2a;
+  --surface-hover: #1a1a1a;
+  --border: #292929;
   --text-primary: #f5f0e8;
-  --text-secondary: #7a7060;
+  --text-secondary: #8b8172;
   --accent: #c9a84c;
-  --accent-hover: #be9a3f;
+  --accent-hover: #d6b65a;
   --danger: #e24837;
   --danger-bg: #1a0a08;
   --radius: 10px;
@@ -21,12 +19,12 @@
 [data-theme="light"] {
   --bg: #faf8f4;
   --surface: #ffffff;
-  --surface-hover: #f5f0e8;
-  --border: #e4ddd0;
+  --surface-hover: #f4eee4;
+  --border: #ded6c8;
   --text-primary: #0f0c08;
-  --text-secondary: #6a5c48;
+  --text-secondary: #6a5d4b;
   --accent: #9a6e1a;
-  --accent-hover: #bb8a30;
+  --accent-hover: #ad7d25;
   --danger: #c0392b;
   --danger-bg: #fdf0ee;
 }
@@ -65,32 +63,68 @@ h4 {
   letter-spacing: -0.01em;
 }
 
-body,
-.movie-card,
-.navbar,
-.search-input,
-.category-select {
+*,
+*::before,
+*::after {
   transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease;
+    background-color 0.45s ease,
+    border-color 0.45s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease,
+    opacity 0.35s ease;
 }
-
 /* ── Navbar ────────────────────────────────── */
 
+.navbar-wrapper {
+  min-height: 72px;
+}
+
 .navbar {
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  min-height: 72px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 18px 40px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 50;
+  padding: 0 40px;
+  background: rgba(17, 17, 17, 0.72);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition:
+    width 0.4s ease,
+    border-radius 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.navbar-scrolled {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  width: 88%;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  background: rgba(17, 17, 17, 0.65);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transform: translate(-50%, 0);
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="light"] .navbar {
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom-color: rgba(154, 110, 26, 0.18);
+}
+
+[data-theme="light"] .navbar-scrolled {
+  background: rgba(255, 255, 255, 0.68);
+  border-color: rgba(154, 110, 26, 0.25);
+  box-shadow:
+    0 8px 30px rgba(80, 60, 30, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .brand {
@@ -116,6 +150,7 @@ body,
 .nav-divider {
   width: 1px;
   height: 20px;
+  margin: 0 22px;
   background: var(--border);
   flex-shrink: 0;
 }
@@ -124,6 +159,7 @@ body,
   display: flex;
   gap: 28px;
   flex: 1;
+  align-items: center;
 }
 
 .nav-links a {
@@ -163,17 +199,20 @@ body,
   flex-shrink: 0;
 }
 
-/* Mobile navbar */
+/* ── Mobile Navbar ─────────────────────────── */
+
 @media (max-width: 640px) {
   .navbar {
+    min-height: auto;
     flex-wrap: wrap;
-    padding: 14px 20px;
+    padding: 12px 16px;
     gap: 10px;
   }
 
   .brand {
     order: 1;
   }
+
   .nav-actions {
     order: 2;
     margin-left: auto;
@@ -189,11 +228,11 @@ body,
   .surprise-btn span {
     display: none;
   }
+
   .nav-divider {
     display: none;
   }
 }
-
 /* ── Buttons ───────────────────────────────── */
 
 .theme-toggle-btn {
@@ -1729,7 +1768,7 @@ button.explore-btn:disabled {
 }
 
 [data-theme="light"] .marquee-word {
-  opacity: 0.70;
+  opacity: 0.7;
   color: var(--accent);
 }
 
@@ -1749,4 +1788,19 @@ button.explore-btn:disabled {
   opacity: 0.6;
   font-style: normal;
   flex-shrink: 0;
+}
+
+.brand-logo {
+  height: 38px;
+  width: auto;
+  max-width: 100%;
+  display: block;
+  flex-shrink: 0;
+  transition: opacity 0.3s ease;
+}
+
+@media (max-width: 600px) {
+  .brand-logo {
+    height: 28px;
+  }
 }

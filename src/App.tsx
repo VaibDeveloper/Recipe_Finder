@@ -14,12 +14,55 @@ import { ToastProvider } from "./context/ToastContext";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import LeftoverRescue from "./pages/LeftoverRescue";
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 function Navbar() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const [surpriseLoading, setSurpriseLoading] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const navbarWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+  const mediaQuery = window.matchMedia("(max-width: 640px)");
+
+  const setupObserver = () => {
+    const navbarWrapper = navbarWrapperRef.current;
+
+    if (!navbarWrapper) return;
+
+    if (mediaQuery.matches) {
+      setIsScrolled(false);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsScrolled(!entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(navbarWrapper);
+
+    return () => observer.disconnect();
+  };
+
+  let cleanup = setupObserver();
+
+  const handleChange = () => {
+    cleanup?.();
+    cleanup = setupObserver();
+  };
+
+  mediaQuery.addEventListener("change", handleChange);
+
+  return () => {
+    cleanup?.();
+    mediaQuery.removeEventListener("change", handleChange);
+  };
+}, []);
+
 
   const handleSurpriseMe = () => {
     if (surpriseLoading) return;
@@ -36,61 +79,70 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar">
-      <Link to="/" className="brand">
-        <span className="brand-icon">🍳</span>
-        <span className="brand-name">Foodie - Recipe Finder</span>
-      </Link>
+    <div className="navbar-wrapper" ref={navbarWrapperRef}>
+      <nav className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
+        <Link to="/" className="brand">
+          <img
+            src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
+            alt="Foodie logo"
+            className="brand-logo"
+          />
+        </Link>
 
-      <span className="nav-divider" aria-hidden="true"></span>
+        <span className="nav-divider" aria-hidden="true"></span>
 
-      <div className="nav-links">
-        <NavLink
-          to="/"
-          end
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Home
-        </NavLink>
-        <NavLink
-          to="/recipes"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Explore
-        </NavLink>
-        <NavLink
-          to="/rescue"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Leftover Rescue
-        </NavLink>
-        <NavLink
-          to="/favorites"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Favorites
-        </NavLink>
-      </div>
+        <div className="nav-links">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Home
+          </NavLink>
 
-      <span className="nav-divider" aria-hidden="true"></span>
+          <NavLink
+            to="/recipes"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Explore
+          </NavLink>
 
-      <div className="nav-actions">
-        <button
-          className="surprise-btn"
-          onClick={handleSurpriseMe}
-          disabled={surpriseLoading}
-        >
-          🎲 <span>{surpriseLoading ? "Finding..." : "Surprise Me"}</span>
-        </button>
-        <button
-          className="theme-toggle-btn"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-        >
-          {theme === "dark" ? "☀️" : "🌙"}
-        </button>
-      </div>
-    </nav>
+          <NavLink
+            to="/rescue"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Leftover Rescue
+          </NavLink>
+
+          <NavLink
+            to="/favorites"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Favorites
+          </NavLink>
+        </div>
+
+        <span className="nav-divider" aria-hidden="true"></span>
+
+        <div className="nav-actions">
+          <button
+            className="surprise-btn"
+            onClick={handleSurpriseMe}
+            disabled={surpriseLoading}
+          >
+            🎲 <span>{surpriseLoading ? "Finding..." : "Surprise Me"}</span>
+          </button>
+
+          <button
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
+        </div>
+      </nav>
+    </div>
   );
 }
 
