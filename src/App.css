@@ -983,10 +983,23 @@ button.explore-btn:disabled {
 /* ── Skeletons ─────────────────────────────── */
 
 .skeleton-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: rgba(17, 17, 17, 0.65);
+  border: 1px solid rgba(201, 168, 76, 0.16);
   border-radius: var(--radius);
   padding: 8px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .skeleton-card {
+  background: rgba(255, 255, 255, 0.68);
+  border-color: rgba(154, 110, 26, 0.16);
+  box-shadow:
+    0 8px 24px rgba(80, 60, 30, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .skeleton-poster {
