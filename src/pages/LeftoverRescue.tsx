@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFavorites} from "../hooks/useFavorites";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../hooks/useToast";
 
 type GeneratedRecipe = {
   id: string;
@@ -42,7 +42,8 @@ function LeftoverRescue() {
             Authorization: `Bearer ${groqKey}`,
           },
           body: JSON.stringify({
-            model: "llama-3.1-8b-instant",
+            model: "openai/gpt-oss-20b",
+            reasoning_effort: "low",
             max_tokens: 700,
             messages: [
               {

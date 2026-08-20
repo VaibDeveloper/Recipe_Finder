@@ -1,10 +1,25 @@
 import { useState, useEffect } from "react";
 import RecipeCard from "../components/RecipeCard";
-import type { Recipe, CategoryListResponse, IngredientFilterResponse } from "../types/Recipe";
+import type {
+  Recipe,
+  RawMeal,
+  FilterMeal,
+  MealDBResponse,
+  CategoryFilterResponse,
+  CategoryListResponse,
+  IngredientFilterResponse,
+} from "../types/Recipe";
 import { useFavorites } from "../hooks/useFavorites";
 import SkeletonCard from "../components/SkeletonCard";
 
 type SearchMode = "name" | "ingredients";
+
+function parseIngredients(query: string): string[] {
+  return query
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter((item) => item.length > 0);
+}
 
 function RecipeFinder() {
   const [mode, setMode] = useState<SearchMode>("name");
@@ -15,7 +30,25 @@ function RecipeFinder() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadedSearchKey, setLoadedSearchKey] = useState<string | null>(null);
   const { toggleFavorite, isFavorite } = useFavorites();
+
+  const ingredientsList = parseIngredients(debouncedQuery);
+  const searchKey =
+    mode === "name"
+      ? `name:${debouncedQuery}:${category}`
+      : `ingredients:${ingredientsList.join(",")}`;
+
+  if (searchKey !== loadedSearchKey) {
+    setLoadedSearchKey(searchKey);
+    setError(null);
+    if (mode === "ingredients" && ingredientsList.length === 0) {
+      setRecipes([]);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }
 
   // Fetch the list of categories once, on mount
   useEffect(() => {
@@ -43,9 +76,6 @@ function RecipeFinder() {
   useEffect(() => {
     if (mode !== "name") return;
 
-    setLoading(true);
-    setError(null);
-
     const url =
       category === "all"
         ? `https://www.themealdb.com/api/json/v1/1/search.php?s=${debouncedQuery}`
@@ -53,11 +83,11 @@ function RecipeFinder() {
 
     fetch(url)
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: MealDBResponse | CategoryFilterResponse) => {
         if (!data.meals) {
           setRecipes([]);
         } else if (category === "all") {
-          const formatted: Recipe[] = data.meals.map((meal: any) => ({
+          const formatted: Recipe[] = (data.meals as RawMeal[]).map((meal) => ({
             id: meal.idMeal,
             name: meal.strMeal,
             thumbnail: meal.strMealThumb,
@@ -65,7 +95,7 @@ function RecipeFinder() {
           }));
           setRecipes(formatted);
         } else {
-          const formatted: Recipe[] = data.meals.map((meal: any) => ({
+          const formatted: Recipe[] = (data.meals as FilterMeal[]).map((meal) => ({
             id: meal.idMeal,
             name: meal.strMeal,
             thumbnail: meal.strMealThumb,
@@ -85,20 +115,8 @@ function RecipeFinder() {
   useEffect(() => {
     if (mode !== "ingredients") return;
 
-    const ingredients = debouncedQuery
-      .split(",")
-      .map((item) => item.trim().toLowerCase())
-      .filter((item) => item.length > 0);
-
-    if (ingredients.length === 0) {
-      setRecipes([]);
-      setLoading(false);
-      setError(null);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
+    const ingredients = parseIngredients(debouncedQuery);
+    if (ingredients.length === 0) return;
 
     Promise.all(
       ingredients.map((ingredient) =>

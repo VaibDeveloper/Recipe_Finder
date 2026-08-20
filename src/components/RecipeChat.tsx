@@ -50,7 +50,8 @@ Answer the user's question about this specific recipe only, using the ingredient
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "llama-3.1-8b-instant",
+          model: "openai/gpt-oss-20b",
+          reasoning_effort: "low",
           max_tokens: 200,
           messages: [{ role: "system", content: systemPrompt }, ...newMessages],
         }),

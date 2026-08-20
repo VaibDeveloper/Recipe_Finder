@@ -6,7 +6,7 @@ import type {
   RawMealDetail,
 } from "../types/Recipe";
 import { useFavorites } from "../hooks/useFavorites";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../hooks/useToast";
 import { useAiDescription } from "../hooks/useAiDescription";
 import RecipeChat from "../components/RecipeChat";
 

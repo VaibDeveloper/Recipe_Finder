@@ -48,7 +48,8 @@ export function useAiDescription(recipeId: string, recipeName: string, category:
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
+        model: "openai/gpt-oss-20b",
+        reasoning_effort: "low",
         max_tokens: 100,
         messages: [
           {

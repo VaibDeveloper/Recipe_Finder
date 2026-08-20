@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { Recipe } from "../types/Recipe";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../hooks/useToast";
 
 type RecipeCardProps = {
   recipe: Recipe;

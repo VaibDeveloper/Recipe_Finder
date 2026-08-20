@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import RecipeCard from "../components/RecipeCard";
-import type { Recipe } from "../types/Recipe";
+import type { MealDetailResponse, Recipe } from "../types/Recipe";
 import { useFavorites } from "../hooks/useFavorites";
 
 type FavoriteFilter = "all" | "normal" | "ai";
@@ -17,28 +17,34 @@ function Favorites() {
   const [fetching, setFetching] = useState(false);
   const [filter, setFilter] = useState<FavoriteFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loadedFavoriteIds, setLoadedFavoriteIds] = useState<string[] | null>(null);
 
-  useEffect(() => {
+  if (favoriteIds !== loadedFavoriteIds) {
+    setLoadedFavoriteIds(favoriteIds);
+    setFetching(favoriteIds.length > 0);
     if (favoriteIds.length === 0) {
       setRecipes([]);
-      return;
     }
+  }
 
-    setFetching(true);
+  useEffect(() => {
+    if (favoriteIds.length === 0) return;
 
     Promise.all(
       favoriteIds.map((id) =>
         fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
           .then((res) => res.json())
-          .then((data) => data.meals[0]),
+          .then((data: MealDetailResponse) => data.meals?.[0]),
       ),
     ).then((meals) => {
-      const formatted: Recipe[] = meals.map((meal) => ({
-        id: meal.idMeal,
-        name: meal.strMeal,
-        thumbnail: meal.strMealThumb,
-        category: meal.strCategory,
-      }));
+      const formatted: Recipe[] = meals
+        .filter((meal) => meal != null)
+        .map((meal) => ({
+          id: meal.idMeal,
+          name: meal.strMeal,
+          thumbnail: meal.strMealThumb,
+          category: meal.strCategory,
+        }));
       setRecipes(formatted);
       setFetching(false);
     });
