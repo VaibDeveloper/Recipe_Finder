@@ -17,21 +17,29 @@ export function useAiDescription(recipeId: string, recipeName: string, category:
   const [description, setDescription] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+
+  const key = recipeId
+    ? JSON.stringify([recipeId, recipeName, category, area])
+    : null;
+
+  if (key !== loadedKey) {
+    setLoadedKey(key);
+    const cached = recipeId ? getCache()[recipeId] : undefined;
+    setDescription(cached ?? null);
+    setError(false);
+    setLoading(Boolean(recipeId) && !cached);
+  }
 
   useEffect(() => {
     if (!recipeId) return;
 
     const cache = getCache();
     if (cache[recipeId]) {
-      setDescription(cache[recipeId]);
       return;
     }
 
-    setLoading(true);
-    setError(false);
-
     const apiKey = import.meta.env.VITE_GROQ_API_KEY;
-    console.log("My API key is:", apiKey);
 
     fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",

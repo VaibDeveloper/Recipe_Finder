@@ -65,6 +65,7 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState<RecipeDetailType | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadedId, setLoadedId] = useState<string | undefined>(undefined);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { showToast } = useToast();
 
@@ -75,10 +76,14 @@ function RecipeDetail() {
     recipe?.area ?? "",
   );
 
-  useEffect(() => {
-    if (!id) return;
+  if (id !== loadedId) {
+    setLoadedId(id);
     setLoading(true);
     setError(null);
+  }
+
+  useEffect(() => {
+    if (!id) return;
 
     fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
       .then((res) => res.json())
